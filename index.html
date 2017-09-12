@@ -155,7 +155,8 @@ sqldf(query)</code></pre>
 ## 23 shockur01   1927    NYA  0
 ## 24 thomamy01   1927    NYA  0
 ## 25  weraju01   1927    NYA  1</code></pre>
-<p>We can use additional commands to further catagorize our data. Example: Suppose we wanted to visualize all instances where the a New York Yankee hit 40 home runs or more.</p>
+<p>We can use additional commands to further catagorize our data.</p>
+<p>Example: Suppose we wanted to visualize all instances where the a New York Yankee hit 40 home runs or more.</p>
 <pre class="r"><code>query&lt;-&quot;SELECT playerID, teamID, yearID, HR FROM Batting
 WHERE teamID='NYA' and HR&gt;=40&quot;
 
@@ -281,6 +282,9 @@ sqldf(query)</code></pre>
 ## 34  mayswi01   1955 51
 ## 35 fieldce01   1990 51
 ## 36 jonesan01   2005 51</code></pre>
+</div>
+<div id="section" class="section level1">
+<h1>——————————————————</h1>
 <p>If we wanted to find all instances of a player striking out less than 10 times with at least 400 at bats, we would write the following:</p>
 <pre class="r"><code>query&lt;-&quot;SELECT playerID, teamID, yearID, SO, AB FROM Batting
 WHERE AB&gt;=400 and SO&lt;10&quot;

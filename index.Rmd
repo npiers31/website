@@ -21,6 +21,7 @@ sqldf(query)
 ```
 
 We can use additional commands to further catagorize our data.
+
 Example:
 Suppose we wanted to visualize all instances where the a New York Yankee hit 40 home runs or more.
 ```{r}
@@ -51,6 +52,7 @@ ORDER BY HR DESC"
 sqldf(query)
 ```
 
+#------------------------------------------------------
 If we wanted to find all instances of a player striking out less than 10 times with at least 400 at bats, we would write the following:
 ```{r}
 query<-"SELECT playerID, teamID, yearID, SO, AB FROM Batting
