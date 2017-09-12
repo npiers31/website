@@ -20,3 +20,8 @@ WHERE teamID='NYA'and yearID=1927"
 sqldf(query)
 ```
 
+Suppose we wanted to visualize all instances where the a New York Yankee hit 40 home runs or more.
+```{r}
+query<-
+```
+
