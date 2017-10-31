@@ -3,9 +3,9 @@ title: "SQL"
 output: html_document
 ---
 
-## Filtering rows and Columns
+## Filtering Rows and Columns
 
-With SQL, you can filter columns with SELECT and ROWS with WHERE. Let's look at an example using the Lahman baseball database. First, we need to load some packages. 
+With SQL, you can filter columns with SELECT and rows with WHERE. Let's look at an example using the Lahman baseball database. First, we need to load some packages. 
 
 ```{r warning=FALSE,message=FALSE}
 library(Lahman)
@@ -22,7 +22,8 @@ sqldf(query)
 
 We can use additional commands to further catagorize our data.
 
-Example:
+#----------------------------------------------------------------------------------------------------------------------
+Example 1:
 Suppose we wanted to visualize all instances where the a New York Yankee hit 40 home runs or more.
 ```{r}
 query<-"SELECT playerID, teamID, yearID, HR FROM Batting
@@ -30,6 +31,8 @@ WHERE teamID='NYA' and HR>=40"
 
 sqldf(query)
 ```
+#---------------------------------------------------------------------------------------------------------------------
+###Example 2:
 If we wanted to find all examples where a player had more than 40 home runs but less than 60 strikeouts, we would write the following:
 ```{r}
 query<- "SELECT playerID, teamID, yearID, HR, SO FROM Batting
@@ -37,13 +40,20 @@ WHERE SO<60 and HR>40"
 
 sqldf(query)
 ```
-Suppose we wanted to find all instances of the Phillies in the 1970s hittinh more than 30 home runs,
+#---------------------------------------------------------------------------------------------------------------------
+###Example 3:
+Suppose we wanted to find all instances of the Phillies in the 1970s hitting more than 30 home runs,
 ```{r}
 query<-"SELECT playerID, yearID, teamID, HR FROM Batting
 WHERE teamID='PHI' and HR>30 and yearID>=1970 and yearID<1980"
 
 sqldf(query)
 ```
+#---------------------------------------------------------------------------------------------------------------------
+
+##Ordering Data Outputs
+We can order output by using the ORDER BY command.
+Unless otherwise specified, the data will be ordered in ascending order. To order in descending order, DESC can be placed in the ORDER BY line.
 
 If we wanted to find every instance of a player hitting more than 50 home runs with the players with the most home runs at the top, we would write the following:
 ```{r}
@@ -51,12 +61,120 @@ query<-"SELECT playerID, yearID, HR FROM Batting WHERE HR>50
 ORDER BY HR DESC"
 sqldf(query)
 ```
+Following are a few examples of the ORDER BY function.
 
-#------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------
+
+###Example 1:
 If we wanted to find all instances of a player striking out less than 10 times with at least 400 at bats, we would write the following:
 ```{r}
 query<-"SELECT playerID, teamID, yearID, SO, AB FROM Batting
-WHERE AB>=400 and SO<10"
+WHERE AB>=400 and SO<10
+ORDER BY SO"
+
+sqldf(query)
+```
+
+#-----------------------------------------------------------------------------------------------------------------
+
+###Example 2:
+Suppose we want to find every instance that a player hit more than 50 home runs in one season:
+```{r}
+query<-"SELECT playerID,yearID,teamID,HR FROM Batting
+WHERE HR>50
+ORDER BY HR DESC"
+
+sqldf(query)
+```
+
+#-----------------------------------------------------------------------------------------------------------------
+
+##Aggregation
+Aggregation allows us to group information by using the GROUP BY command.However, we must be specific on how we want the information grouped.
+We can find the minimum, maximum, average, and sum of the data with the following commands:
+
+-min(colname)
+
+-max(colname)
+
+-avg(colname)
+
+-sum(colname)
+
+Following are a few examples of the aggregation function.
+
+#------------------------------------------------------------------------------------------------------------------
+
+###Example 1:
+
+Suppose we wanted to find the career homerun total for George Herman "Babe" Ruth, Jr.
+```{r}
+query<-"SELECT playerID,sum(HR) FROM Batting
+WHERE playerID='ruthba01'
+GROUP BY playerID"
+
+sqldf(query)
+```
+
+#------------------------------------------------------------------------------------------------------------------
+
+###Example 3:
+
+If we wanted to display the all of the career homerun totals over 600 in descending order, we could write the following.
+
+```{r}
+query<-"SELECT playerID,sum(HR) FROM Batting
+GROUP BY playerID
+HAVING sum(HR)>=600
+ORDER BY sum(HR) DESC"
+
+sqldf(query)
+```
+
+#------------------------------------------------------------------------------------------------------------------
+
+###Example 3:
+
+Suppose we wanted to find the players with the highest per season homerun totals. Additionally, we could find players with averages over 30.
+```{r}
+query<-"SELECT playerID,avg(HR) FROM Batting
+GROUP BY playerID
+HAVING avg(HR)>30
+ORDER BY avg(HR) DESC"
+
+sqldf(query)
+```
+#-----------------------------------------------------------------------------------------------------------------
+
+##Joining
+
+To join two different tables based on common sets of data, we can use the INNER JOIN and ON command. Use INNER JOIN to indicate that the tables will be merged, and use ON to indicate which sets of data in particular are used.
+
+Following are a few examples of joining.
+#--------------------------------------------------------------------------------------------------------
+
+###Example 1
+
+Suppose we wanted to find create a table that displays Babe Ruth's first and last names, his team, year, and homeruns. To do this, we could write the following:
+```{r}
+query<-"SELECT nameFIRST,nameLAST,teamID,yearID,HR
+FROM Batting INNER JOIN Master
+ON Batting.playerID=Master.playerID
+WHERE Batting.playerID='ruthba01'"
+
+sqldf(query)
+```
+
+#-------------------------------------------------------------------------------------------------------
+
+###Example 2
+
+If we wanted to find all the years that Babe Ruth hit a homerun including teamID, we could write the following:
+```{r}
+query<-"SELECT playerID,name, Batting.yearID, Batting.HR
+FROM Batting INNER JOIN Teams
+ON Batting.teamID=Teams.teamID and Batting.yearID=Teams.yearID
+WHERE playerID='ruthba01'"
 
 sqldf(query)
 ```
